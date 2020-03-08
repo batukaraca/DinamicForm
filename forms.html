@@ -1,0 +1,68 @@
+<html lang="en" ng-app="lostsysApp">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.8/angular.min.js"
+        integrity="sha256-23hi0Ag650tclABdGCdMNSjxvikytyQ44vYGo9HyOrU=" crossorigin="anonymous"></script>
+    <script src="./main.js"></script>
+    <title>Form</title>
+    <script>
+        var angularTodo = angular.module('lostsysApp', []);
+
+
+        angularTodo.controller('mainController', function ($scope, $location) {
+            $scope.form = [];
+            $scope.name;
+            $scope.name= (localStorage.getItem('getForm') !== null) ? JSON.parse(localStorage.getItem('getForm')) : [];
+            localStorage.removeItem('getForm'); 
+            $scope.form = (localStorage.getItem('forms') !== null) ? JSON.parse(localStorage.getItem('forms')) : [];
+
+            function findForm(form) {
+                return form.name === $scope.name;
+            }
+
+            $scope.form= $scope.form.find(findForm);
+
+            console.log($scope.form.fields);
+
+        });
+    </script>
+</head>
+
+<body ng-controller="mainController">
+    <div class="container" style="margin-top:30px">
+        <form>
+            <div class="form-group" ng-show="form.fields[0].first_name != '' && form.fields[0].first_name">
+                <label>{{form.fields[0].first_name}}</label>
+                <input type="{{form.fields[0].type}}" class="form-control" ng-required="form.fields[0].required" placeholder="İsim">
+            </div>
+            <div class="form-group" ng-show="form.fields[1].last_name != '' && form.fields[1].last_name">
+                <label>{{form.fields[1].last_name}}</label>
+                <input type="{{form.fields[1].type}}" class="form-control" ng-required="form.fields[1].required" placeholder="Soy İsim">
+            </div>
+            <div class="form-group" ng-show="form.fields[2].birthdate != '' && form.fields[2].birthdate">
+                <label>{{form.fields[2].birthdate}}</label>
+                <input type="{{form.fields[2].type}}" class="form-control" ng-required="form.fields[2].required" placeholder="Doğum Tarihi">
+            </div>
+            <div class="form-group" ng-show="form.fields[3].address != '' && form.fields[3].address">
+                <label>{{form.fields[3].address}}</label>
+                <input type="{{form.fields[3].type}}" class="form-control" ng-required="form.fields[3].required" placeholder="Adres">
+            </div>
+            <div class="form-group" ng-show="form.fields[4].phone != '' && form.fields[4].phone">
+                <label>{{form.fields[4].phone}}</label>
+                <input type="{{form.fields[4].type}}" class="form-control" ng-required="form.fields[4].required" placeholder="Telefon">
+            </div>
+            <div class="form-group" ng-show="form.fields[5].mail != '' && form.fields[5].mail">
+                <label>{{form.fields[5].mail}}</label>
+                <input type="{{form.fields[5].type}}" class="form-control" ng-required="form.fields[5].required" placeholder="E-Mail">
+            </div>
+            <button type="submit" class="btn btn-primary">Gönder</button>
+        </form>
+    </div>
+
+</body>
+
+</html>
