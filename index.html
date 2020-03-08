@@ -69,10 +69,10 @@
         </div>
         <div class="row margin-t-10">
             <div class="col-12">
-                <table class="table">
+                <table class="table text-center">
                     <tr>
-                        <th>Form Adı</th>
-                        <th>Açıklama</th>
+                        <th class="text-left">Form Adı</th>
+                        <th class="text-left">Açıklama</th>
                         <th>İsim</th>
                         <th>Soyisim</th>
                         <th>Doğum T.</th>
@@ -82,8 +82,8 @@
                         <th>Yapılandır</th>
                     </tr>
                     <tr ng-repeat="form in forms  | filter: searchKeyword ">
-                        <td>{{form.name}}</td>
-                        <td>{{form.description}} </td>
+                        <td class="text-left">{{form.name}}</td>
+                        <td class="text-left">{{form.description}} </td>
                         <td>{{form.fields[0].first_name ? '&#10004;' : '&#x2716;'}}</td>
                         <td>{{form.fields[1].last_name ? '&#10004;' : '&#x2716;'}}</td>
                         <td>{{form.fields[2].birthdate ? '&#10004;' : '&#x2716;'}}</td>
