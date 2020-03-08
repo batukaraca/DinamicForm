@@ -1,0 +1,200 @@
+<html lang="en" ng-app="Evam">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.8/angular.min.js"
+        integrity="sha256-23hi0Ag650tclABdGCdMNSjxvikytyQ44vYGo9HyOrU=" crossorigin="anonymous"></script>
+        <script src="./main.js"></script>
+    <title>Home</title>
+    <style>
+        label{
+            margin-top: 7px;
+        }
+        .margin-t-10{
+            margin-top:10px;
+        }
+        .margin-t-50{
+            margin-top:50px;
+        }
+        .checkbox{
+            width: 125px;
+        }
+        .modal{
+            position: absolute;
+            left:50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            display: none;
+            background-color:white;
+            box-shadow: 0px 0px 10px -2px #000;
+            border-radius: 4px;
+        }
+        .btn-secondary{
+            position: absolute;
+            right:20px;
+            bottom: 20px;
+        }
+        .custom-control-input{
+            z-index: 1;
+        }
+    </style>
+    <script>
+        function newForm() {
+            var myModal = document.getElementById("myModal");
+            myModal.style.display = 'block';
+        }
+        function closeForm() {
+            var myModal = document.getElementById("myModal");
+            myModal.style.display = 'none';
+        }
+    </script>
+</head>
+
+<body ng-controller="FormCtrl">
+    <div class="container margin-t-10">
+        <div class="row">
+            <div class="col-4"><input class="form-control ng-pristine ng-valid" ng-model="searchKeyword"
+                    placeholder="Ara" type="text">
+            </div>
+            <div class="col-8 text-right">
+                <button type="button" class="btn btn-primary" onclick="newForm()">
+                    Yeni Form Oluştur
+                  </button>
+            </div>
+        </div>
+        <div class="row margin-t-10">
+            <div class="col-12">
+                <table class="table">
+                    <tr>
+                        <th>Form Adı</th>
+                        <th>Açıklama</th>
+                        <th>İsim</th>
+                        <th>Soyisim</th>
+                        <th>Doğum T.</th>
+                        <th>Adres</th>
+                        <th>Telefon</th>
+                        <th>E-mail</th>
+                        <th>Yapılandır</th>
+                    </tr>
+                    <tr ng-repeat="form in forms  | filter: searchKeyword ">
+                        <td>{{form.name}}</td>
+                        <td>{{form.description}} </td>
+                        <td>{{form.fields[0].first_name ? '&#10004;' : '&#x2716;'}}</td>
+                        <td>{{form.fields[1].last_name ? '&#10004;' : '&#x2716;'}}</td>
+                        <td>{{form.fields[2].birthdate ? '&#10004;' : '&#x2716;'}}</td>
+                        <td>{{form.fields[3].address ? '&#10004;' : '&#x2716;'}}</td>
+                        <td>{{form.fields[4].phone ? '&#10004;' : '&#x2716;'}}</td>
+                        <td>{{form.fields[5].mail ? '&#10004;' : '&#x2716;'}}</td>
+                        <td><input type="button" value="Oluştur" class="btn btn-primary" ng-click="goPage(form.name)" /></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+      <div class="modal" id="myModal">
+          <div class="container-fluid margin-t-50">
+            <div class="row">
+                <div class="col-8">
+                    <form action="">
+                        <input type="text" class="form-control ng-pristine ng-valid margin-t-10" required placeholder="Form Adı"
+                            ng-model="name">
+                        <input type="text" class="form-control ng-pristine ng-valid margin-t-10" required placeholder="Açıklama"
+                            ng-model="description">
+                        <div class="d-inline-flex w-100 margin-t-10" ng-show='fn_result'>
+                            <input type="text" disabled class="form-control ng-pristine ng-valid" placeholder="isim"
+                                ng-model="first_name">
+                            <select ng-options="type as type.name for type in types"
+                                class="form-control ng-pristine ng-valid" ng-init="selectedFN = types[0]"
+                                ng-model="selectedFN" ng-change="update(1)"></select>
+                            <input type="checkbox" class="form-control ng-pristine ng-valid checkbox" placeholder="Required"
+                                ng-model="first_name_required"><label for="">Required</label>
+                        </div>
+                        <div class="d-inline-flex w-100 margin-t-10" ng-show='ln_result'>
+                            <input type="text" disabled class="form-control ng-pristine ng-valid" placeholder="Soy İsim"
+                                ng-model="last_name">
+                            <select ng-options="type as type.name for type in types"
+                                class="form-control ng-pristine ng-valid" ng-init="selectedLN = types[0]"
+                                ng-model="selectedLN" ng-change="update(2)"></select>
+                            <input type="checkbox" class="form-control ng-pristine ng-valid checkbox" placeholder="Required"
+                                ng-model="last_name_required"><label for="">Required</label>
+                        </div>
+                        <div class="d-inline-flex w-100 margin-t-10" ng-show='birthdate_result'>
+                            <input type="text" disabled class="form-control ng-pristine ng-valid" placeholder="Doğum Tarihi"
+                                ng-model="birthdate">
+                            <select ng-options="type as type.name for type in types"
+                                class="form-control ng-pristine ng-valid" ng-init="selectedBD = types[0]"
+                                ng-model="selectedBD" ng-change="update(3)"></select>
+                            <input type="checkbox" class="form-control ng-pristine ng-valid checkbox" placeholder="Required"
+                                ng-model="birthdate_required"><label for="">Required</label>
+                        </div>
+                        <div class="d-inline-flex w-100 margin-t-10" ng-show='address_result'>
+                            <input type="text" disabled class="form-control ng-pristine ng-valid" placeholder="Adres"
+                                ng-model="address">
+                            <select ng-options="type as type.name for type in types"
+                                class="form-control ng-pristine ng-valid" ng-init="selectedAdres = types[0]"
+                                ng-model="selectedAdres" ng-change="update(4)"></select>
+                            <input type="checkbox" class="form-control ng-pristine ng-valid checkbox" placeholder="Required" 
+                                ng-model="address_required"><label for="">Required</label>
+                        </div>
+                        <div class="d-inline-flex w-100 margin-t-10" ng-show='phone_result'>
+                            <input type="text" disabled class="form-control ng-pristine ng-valid" placeholder="Telefon"
+                                ng-model="phone">
+                            <select ng-options="type as type.name for type in types"
+                                class="form-control ng-pristine ng-valid" ng-init="selectedP = types[0]"
+                                ng-model="selectedP" ng-change="update(5)"></select>
+                            <input type="checkbox" class="form-control ng-pristine ng-valid checkbox" placeholder="Required" 
+                                ng-model="phone_required"><label for="">Required</label>
+                        </div>
+                        <div class="d-inline-flex w-100 margin-t-10" ng-show='mail_result'>
+                            <input type="text" disabled class="form-control ng-pristine ng-valid" placeholder="E-mail"
+                                ng-model="mail">
+                            <select ng-options="type as type.name for type in types"
+                                class="form-control ng-pristine ng-valid" ng-init="selectedMail = types[0]"
+                                ng-model="selectedMail" ng-change="update(6)"></select>
+                            <input type="checkbox" class="form-control ng-pristine ng-valid checkbox" placeholder="Required" 
+                                ng-model="mail_required"><label for="">Required</label>
+                        </div>
+                        <input type="submit" value="Yeni Form Ekle" class="btn btn-primary margin-t-10" ng-click="addRow()" />
+                    </form>
+                </div>
+                <div class="col-4">
+                    <h5>Forma Alan Ekle</h5>
+                    <div class="custom-control custom-checkbox margin-t-10">
+                        <input type="checkbox" class="custom-control-input" ng-change="getdetails(1)" ng-model="fn_check">
+                        <p class="custom-control-label">İsim</p>
+                    </div>
+                    <div class="custom-control custom-checkbox  margin-t-10">
+                        <input type="checkbox" class="custom-control-input" ng-change="getdetails(2)" ng-model="ln_check">
+                        <p class="custom-control-label">Soy İsim</p>
+                    </div>
+                    <div class="custom-control custom-checkbox  margin-t-10">
+                        <input type="checkbox" class="custom-control-input" ng-change="getdetails(3)" ng-model="bd_check">
+                        <p class="custom-control-label">Doğum Tarihi</p>
+                    </div>
+                    <div class="custom-control custom-checkbox  margin-t-10">
+                        <input type="checkbox"class="custom-control-input" ng-change="getdetails(4)" ng-model="ad_check">
+                        <p class="custom-control-label">Adres</p>
+                    </div>
+                    <div class="custom-control custom-checkbox  margin-t-10">
+                        <input type="checkbox" class="custom-control-input" ng-change="getdetails(5)" ng-model="p_check">
+                        <p class="custom-control-label">Telefon</p>
+                    </div>
+                    <div class="custom-control custom-checkbox" style="margin-top:5px">
+                        <input type="checkbox" class="custom-control-input" ng-change="getdetails(6)" ng-model="mail_check">
+                        <label class="custom-control-label">Email</label>
+                      </div>
+                </div>
+            </div>
+            <button class="btn btn-secondary"  onclick="closeForm()">Kapat</button>
+          </div>
+            
+            
+      </div>
+</body>
+
+</html>
